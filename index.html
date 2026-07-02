@@ -223,9 +223,16 @@
     color:#fff;
     font-family:'Archivo Black', sans-serif;
     font-size:15px;
-    background:
+    background-image:
       linear-gradient(180deg, rgba(18,13,15,0) 30%, rgba(18,13,15,.9) 100%),
       linear-gradient(135deg, var(--gradA,#2e1a24), var(--gradB,#3a1420));
+    background-size:cover;
+    background-position:center;
+  }
+  .thumb.has-cover{
+    background-image:
+      linear-gradient(180deg, rgba(18,13,15,0) 30%, rgba(18,13,15,.9) 100%),
+      var(--cover);
   }
 
   .card:nth-child(2) .thumb{ --gradA:#241a35; --gradB:#3a1450; }
@@ -345,133 +352,50 @@
     <span>Actualizado hoy</span>
   </div>
 
-  <div class="grid">
-
-    <article class="card">
-      <a href="zero-to-hero.html">
-      <div class="thumb">
-        <span class="version-tag">v0.4</span>
-        Zero to Hero
-      </div>
-      </a>
-      <div class="card-body">
-        <h3><a href="zero-to-hero.html">DESCARGAR Zero to Hero [v0.4] PARA ANDROID Y PC</a> <span class="edit">· Editar</span></h3>
-        <p>Interpretarás a Malcolm, un joven que descubre un mundo nuevo lleno de decisiones inesperadas...</p>
-        <div class="tags">
-          <span class="tag">2DCG</span>
-          <span class="tag">Humor</span>
-          <span class="tag">Novela visual</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>2 jul 2026</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="thumb">
-        <span class="version-tag">v0.2</span>
-        University Spy
-      </div>
-      <div class="card-body">
-        <h3>DESCARGAR University Spy [v0.2] PARA ANDROID Y PC <span class="edit">· Editar</span></h3>
-        <p>Bienvenido de nuevo al campus. Un nuevo semestre trae secretos que nadie esperaba descubrir...</p>
-        <div class="tags">
-          <span class="tag">Entorno escolar</span>
-          <span class="tag">Erótico</span>
-          <span class="tag">NTR</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>2 jul 2026</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="thumb">
-        <span class="version-tag">v0.3.1</span>
-        Sort of Justice
-      </div>
-      <div class="card-body">
-        <h3>DESCARGAR Sort of Justice [Ch.3 v0.3.1] PARA ANDROID Y PC <span class="edit">· Editar</span></h3>
-        <p>Kind of Justice es una novela visual centrada en una historia de intriga y decisiones morales...</p>
-        <div class="tags">
-          <span class="tag">3DCG</span>
-          <span class="tag">Voyeurismo</span>
-          <span class="tag">Sexo oral</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>2 jul 2026</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="thumb">
-        <span class="version-tag">v1.0</span>
-        Midnight Campus
-      </div>
-      <div class="card-body">
-        <h3>DESCARGAR Midnight Campus [v1.0] PARA ANDROID Y PC <span class="edit">· Editar</span></h3>
-        <p>Un thriller romántico donde cada elección cambia el rumbo de la historia principal...</p>
-        <div class="tags">
-          <span class="tag">Drama</span>
-          <span class="tag">Romance</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>1 jul 2026</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="thumb">
-        <span class="version-tag">v0.7</span>
-        Second Chance
-      </div>
-      <div class="card-body">
-        <h3>DESCARGAR Second Chance [v0.7] PARA ANDROID Y PC <span class="edit">· Editar</span></h3>
-        <p>Una segunda oportunidad para reescribir tu historia. Cada decisión cuenta más de lo que crees...</p>
-        <div class="tags">
-          <span class="tag">RPG</span>
-          <span class="tag">Fantasía</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>1 jul 2026</span>
-        </div>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="thumb">
-        <span class="version-tag">v0.5</span>
-        Late Shift
-      </div>
-      <div class="card-body">
-        <h3>DESCARGAR Late Shift [v0.5] PARA ANDROID Y PC <span class="edit">· Editar</span></h3>
-        <p>El turno de noche nunca fue tan interesante. Conoce a los personajes que cambiarán tu rutina...</p>
-        <div class="tags">
-          <span class="tag">Comedia</span>
-          <span class="tag">Slice of life</span>
-        </div>
-        <div class="meta">
-          <span>Arcangel91</span>
-          <span>30 jun 2026</span>
-        </div>
-      </div>
-    </article>
-
+  <div class="grid" id="gamesGrid">
+    <!-- Las tarjetas se generan automáticamente desde games.json -->
   </div>
 </main>
 
 <footer>
   Zona Kaliente — Contenido +18. Todos los juegos pertenecen a sus respectivos creadores.
 </footer>
+
+<script>
+  async function cargarJuegos(){
+    const grid = document.getElementById('gamesGrid');
+    try{
+      const res = await fetch('games.json', {cache:'no-store'});
+      const juegos = await res.json();
+
+      // Más nuevo primero (por si el JSON no viene ordenado)
+      grid.innerHTML = juegos.map(j => `
+        <article class="card">
+          <a href="game.html?id=${encodeURIComponent(j.id)}">
+            <div class="thumb has-cover" style="--cover:url('${j.portada}');">
+              <span class="version-tag">${j.version}</span>
+            </div>
+          </a>
+          <div class="card-body">
+            <h3><a href="game.html?id=${encodeURIComponent(j.id)}">DESCARGAR ${j.titulo} [${j.version}] PARA ANDROID Y PC</a></h3>
+            <p>${j.descripcion.slice(0, 130)}...</p>
+            <div class="tags">
+              ${j.tags.slice(0,3).map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+            <div class="meta">
+              <span>${j.autor}</span>
+              <span>${j.fecha}</span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }catch(err){
+      grid.innerHTML = '<p style="color:var(--text-dim)">No se pudieron cargar los juegos.</p>';
+      console.error('Error cargando games.json:', err);
+    }
+  }
+  cargarJuegos();
+</script>
 
 </body>
 </html>
