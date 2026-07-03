@@ -423,7 +423,7 @@
           </div>
         </a>
         <div class="card-body">
-          <h3><a href="game.html?id=${encodeURIComponent(j.id)}">DESCARGAR ${j.titulo} [${j.version}] PARA ANDROID Y PC</a></h3>
+          <h3><a href="game.html?id=${encodeURIComponent(j.id)}">${j.titulo}</a></h3>
           <p>${j.descripcion.slice(0, 130)}...</p>
           <div class="tags">
             ${j.tags.slice(0,3).map(t => `<span class="tag">${t}</span>`).join('')}
